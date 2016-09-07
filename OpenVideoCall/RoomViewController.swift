@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import WebKit
 
 protocol RoomVCDelegate: class {
     func roomVCNeedClose(roomVC: RoomViewController)
@@ -409,7 +408,7 @@ private extension RoomViewController {
             setIdleTimerActive(false)
         } else {
             dispatch_async(dispatch_get_main_queue(), {
-                self.alertEngineString("\(NSLocalizedString("Join channel failed ", comment: ""))\(code)")
+                self.alertEngineString("Join channel failed: \(code)")
             })
         }
         
