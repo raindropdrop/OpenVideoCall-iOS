@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SettingsVCDelegate: NSObjectProtocol {
-    func settingsVC(settingsVC: SettingsViewController, didSelectProfile profile: AgoraRtcVideoProfile)
+    func settingsVC(_ settingsVC: SettingsViewController, didSelectProfile profile: AgoraRtcVideoProfile)
 }
 
 class SettingsViewController: UIViewController {
@@ -23,20 +23,20 @@ class SettingsViewController: UIViewController {
     }
     weak var delegate: SettingsVCDelegate?
     
-    private let profiles: [AgoraRtcVideoProfile] = AgoraRtcVideoProfile.list()
+    fileprivate let profiles: [AgoraRtcVideoProfile] = AgoraRtcVideoProfile.list()
     
-    @IBAction func doConfirmPressed(sender: UIButton) {
+    @IBAction func doConfirmPressed(_ sender: UIButton) {
         delegate?.settingsVC(self, didSelectProfile: videoProfile)
     }
 }
 
 extension SettingsViewController: UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return profiles.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("profileCell", forIndexPath: indexPath) as! ProfileCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
         let selectedProfile = profiles[indexPath.row]
         cell.updateWithProfile(selectedProfile, isSelected: (selectedProfile == videoProfile))
         
@@ -45,7 +45,7 @@ extension SettingsViewController: UITableViewDataSource {
 }
 
 extension SettingsViewController: UITableViewDelegate {
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedProfile = profiles[indexPath.row]
         videoProfile = selectedProfile
     }

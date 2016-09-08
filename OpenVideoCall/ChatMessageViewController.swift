@@ -12,7 +12,7 @@ class ChatMessageViewController: UIViewController {
     
     @IBOutlet weak var messageTableView: UITableView!
     
-    private var messageList = [Message]()
+    fileprivate var messageList = [Message]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,19 +21,19 @@ class ChatMessageViewController: UIViewController {
         messageTableView.estimatedRowHeight = 24
     }
     
-    func appendChat(text: String, fromUid uid: Int64) {
-        let message = Message(text: text, type: .Chat)
+    func appendChat(_ text: String, fromUid uid: Int64) {
+        let message = Message(text: text, type: .chat)
         appendMessage(message)
     }
     
-    func appendAlert(text: String) {
-        let message = Message(text: text, type: .Alert)
+    func appendAlert(_ text: String) {
+        let message = Message(text: text, type: .alert)
         appendMessage(message)
     }
 }
 
 private extension ChatMessageViewController {
-    func appendMessage(message: Message) {
+    func appendMessage(_ message: Message) {
         messageList.append(message)
         
         var deleted: Message?
@@ -44,32 +44,32 @@ private extension ChatMessageViewController {
         updateMessageTableWithDeletedMesage(deleted)
     }
     
-    func updateMessageTableWithDeletedMesage(deleted: Message?) {
+    func updateMessageTableWithDeletedMesage(_ deleted: Message?) {
         guard let tableView = messageTableView else {
             return
         }
         
-        let insertIndexPath = NSIndexPath(forRow: messageList.count - 1, inSection: 0)
+        let insertIndexPath = IndexPath(row: messageList.count - 1, section: 0)
         
         tableView.beginUpdates()
         if deleted != nil {
-            tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
+            tableView.deleteRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
-        tableView.insertRowsAtIndexPaths([insertIndexPath], withRowAnimation: .None)
+        tableView.insertRows(at: [insertIndexPath], with: .none)
         tableView.endUpdates()
         
-        tableView.scrollToRowAtIndexPath(insertIndexPath, atScrollPosition: .Bottom, animated: false)
+        tableView.scrollToRow(at: insertIndexPath, at: .bottom, animated: false)
     }
 }
 
 extension ChatMessageViewController: UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messageList.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("messageCell", forIndexPath: indexPath) as! ChatMessageCell
-        let message = messageList[indexPath.row]
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath) as! ChatMessageCell
+        let message = messageList[(indexPath as NSIndexPath).row]
         cell.setMessage(message)
         return cell
     }

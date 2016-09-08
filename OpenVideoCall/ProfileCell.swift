@@ -14,7 +14,7 @@ class ProfileCell: UITableViewCell {
     @IBOutlet weak var frameLabel: UILabel!
     @IBOutlet weak var bitRateLabel: UILabel!
     
-    func updateWithProfile(profile: AgoraRtcVideoProfile, isSelected: Bool) {
+    func updateWithProfile(_ profile: AgoraRtcVideoProfile, isSelected: Bool) {
         if let size = profile.resolution() {
             resLabel.text = "\(Int(size.width))x\(Int(size.height))"
         } else {
@@ -29,6 +29,6 @@ class ProfileCell: UITableViewCell {
         
         frameLabel.text = "\(profile.fps())"
         
-        backgroundColor = isSelected ? UIColor(red: 0, green: 0, blue: 0.5, alpha: 0.3) : UIColor.whiteColor()
+        backgroundColor = isSelected ? UIColor(red: 0, green: 0, blue: 0.5, alpha: 0.3) : UIColor.white
     }
 }

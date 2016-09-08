@@ -9,7 +9,7 @@
 import UIKit
 
 protocol RoomVCDelegate: class {
-    func roomVCNeedClose(roomVC: RoomViewController)
+    func roomVCNeedClose(_ roomVC: RoomViewController)
 }
 
 class RoomViewController: UIViewController {
@@ -47,11 +47,11 @@ class RoomViewController: UIViewController {
     weak var delegate: RoomVCDelegate?
     
     //MARK: hide & show
-    private var shouldHideFlowViews = false {
+    fileprivate var shouldHideFlowViews = false {
         didSet {
             if let flowViews = flowViews {
                 for view in flowViews {
-                    view.hidden = shouldHideFlowViews
+                    view.isHidden = shouldHideFlowViews
                 }
             }
         }
@@ -59,36 +59,36 @@ class RoomViewController: UIViewController {
     
     //MARK: engine & session
     var agoraKit: AgoraRtcEngineKit!
-    private var videoSessions = [VideoSession]() {
+    fileprivate var videoSessions = [VideoSession]() {
         didSet {
             updateInterfaceWithSessions(self.videoSessions, targetSize: containerView.frame.size, animation: true)
         }
     }
-    private var doubleClickFullSession: VideoSession? {
+    fileprivate var doubleClickFullSession: VideoSession? {
         didSet {
             if videoSessions.count >= 3 && doubleClickFullSession != oldValue {
                 updateInterfaceWithSessions(videoSessions, targetSize: containerView.frame.size, animation: true)
             }
         }
     }
-    private let videoViewLayout = VideoViewLayout()
-    private var dataChannelId: Int = -1
+    fileprivate let videoViewLayout = VideoViewLayout()
+    fileprivate var dataChannelId: Int = -1
     
     //MARK: alert
-    private weak var currentAlert: UIAlertController?
+    fileprivate weak var currentAlert: UIAlertController?
     
     //MARK: mute
-    private var audioMuted = false {
+    fileprivate var audioMuted = false {
         didSet {
-            muteAudioButton?.setImage(UIImage(named: audioMuted ? "btn_mute_blue" : "btn_mute"), forState: .Normal)
+            muteAudioButton?.setImage(UIImage(named: audioMuted ? "btn_mute_blue" : "btn_mute"), for: UIControlState())
             agoraKit.muteLocalAudioStream(audioMuted)
         }
     }
-    private var videoMuted = false {
+    fileprivate var videoMuted = false {
         didSet {
-            muteVideoButton?.setImage(UIImage(named: videoMuted ? "btn_video" : "btn_voice"), forState: .Normal)
-            cameraButton?.hidden = videoMuted
-            speakerButton?.hidden = !videoMuted
+            muteVideoButton?.setImage(UIImage(named: videoMuted ? "btn_video" : "btn_voice"), for: UIControlState())
+            cameraButton?.isHidden = videoMuted
+            speakerButton?.isHidden = !videoMuted
             
             agoraKit.muteLocalVideoStream(videoMuted)
             setVideoMuted(videoMuted, forUid: 0)
@@ -98,17 +98,17 @@ class RoomViewController: UIViewController {
     }
     
     //MARK: speaker
-    private var speakerEnabled = true {
+    fileprivate var speakerEnabled = true {
         didSet {
-            speakerButton?.setImage(UIImage(named: speakerEnabled ? "btn_speaker_blue" : "btn_speaker"), forState: .Normal)
-            speakerButton?.setImage(UIImage(named: speakerEnabled ? "btn_speaker" : "btn_speaker_blue"), forState: .Highlighted)
+            speakerButton?.setImage(UIImage(named: speakerEnabled ? "btn_speaker_blue" : "btn_speaker"), for: UIControlState())
+            speakerButton?.setImage(UIImage(named: speakerEnabled ? "btn_speaker" : "btn_speaker_blue"), for: .highlighted)
             
             agoraKit.setEnableSpeakerphone(speakerEnabled)
         }
     }
     
     //MARK: filter
-    private var isFiltering = false {
+    fileprivate var isFiltering = false {
         didSet {
             guard let agoraKit = agoraKit else {
                 return
@@ -116,25 +116,25 @@ class RoomViewController: UIViewController {
             
             if isFiltering {
                 AGVideoPreProcessing.registerVideoPreprocessing(agoraKit)
-                filterButton?.setImage(UIImage(named: "btn_filter_blue"), forState: .Normal)
+                filterButton?.setImage(UIImage(named: "btn_filter_blue"), for: UIControlState())
             } else {
                 AGVideoPreProcessing.deregisterVideoPreprocessing(agoraKit)
-                filterButton?.setImage(UIImage(named: "btn_filter"), forState: .Normal)
+                filterButton?.setImage(UIImage(named: "btn_filter"), for: UIControlState())
             }
         }
     }
     
     //MARK: text message
-    private var chatMessageVC: ChatMessageViewController?
-    private var isInputing = false {
+    fileprivate var chatMessageVC: ChatMessageViewController?
+    fileprivate var isInputing = false {
         didSet {
             if isInputing {
                 messageTextField?.becomeFirstResponder()
             } else {
                 messageTextField?.resignFirstResponder()
             }
-            messageInputerView?.hidden = !isInputing
-            messageButton?.setImage(UIImage(named: isInputing ? "btn_message_blue" : "btn_message"), forState: .Normal)
+            messageInputerView?.isHidden = !isInputing
+            messageButton?.setImage(UIImage(named: isInputing ? "btn_message_blue" : "btn_message"), for: UIControlState())
         }
     }
     
@@ -143,68 +143,68 @@ class RoomViewController: UIViewController {
         super.viewDidLoad()
         
         roomNameLabel.text = "\(roomName)"
-        backgroundTap.requireGestureRecognizerToFail(backgroundDoubleTap)
+        backgroundTap.require(toFail: backgroundDoubleTap)
         addKeyboardObserver()
         
         loadAgoraKit()
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let segueId = segue.identifier else {
             return
         }
         
         switch segueId {
         case "VideoVCEmbedChatMessageVC":
-            chatMessageVC = segue.destinationViewController as? ChatMessageViewController
+            chatMessageVC = segue.destination as? ChatMessageViewController
         default:
             break
         }
     }
     
     //MARK: - user action
-    @IBAction func doMessagePressed(sender: UIButton) {
+    @IBAction func doMessagePressed(_ sender: UIButton) {
         isInputing = !isInputing
     }
     
-    @IBAction func doCloseMessagePressed(sender: UIButton) {
+    @IBAction func doCloseMessagePressed(_ sender: UIButton) {
         isInputing = false
     }
     
-    @IBAction func doMuteVideoPressed(sender: UIButton) {
+    @IBAction func doMuteVideoPressed(_ sender: UIButton) {
         videoMuted = !videoMuted
     }
     
-    @IBAction func doMuteAudioPressed(sender: UIButton) {
+    @IBAction func doMuteAudioPressed(_ sender: UIButton) {
         audioMuted = !audioMuted
     }
     
-    @IBAction func doCameraPressed(sender: UIButton) {
+    @IBAction func doCameraPressed(_ sender: UIButton) {
         agoraKit.switchCamera()
     }
     
-    @IBAction func doSpeakerPressed(sender: UIButton) {
+    @IBAction func doSpeakerPressed(_ sender: UIButton) {
         speakerEnabled = !speakerEnabled
     }
     
-    @IBAction func doFilterPressed(sender: UIButton) {
+    @IBAction func doFilterPressed(_ sender: UIButton) {
         isFiltering = !isFiltering
     }
     
-    @IBAction func doClosePressed(sender: UIButton) {
+    @IBAction func doClosePressed(_ sender: UIButton) {
         leaveChannel()
     }
     
-    @IBAction func doBackTapped(sender: UITapGestureRecognizer) {
+    @IBAction func doBackTapped(_ sender: UITapGestureRecognizer) {
         if !isInputing {
             shouldHideFlowViews = !shouldHideFlowViews
         }
     }
     
-    @IBAction func doBackDoubleTapped(sender: UITapGestureRecognizer) {
+    @IBAction func doBackDoubleTapped(_ sender: UITapGestureRecognizer) {
         if doubleClickFullSession == nil {
             //将双击到的session全屏
-            if let tappedIndex = videoViewLayout.reponseViewIndexOfLocation(sender.locationInView(containerView)) {
+            if let tappedIndex = videoViewLayout.reponseViewIndexOfLocation(sender.location(in: containerView)) {
                 doubleClickFullSession = videoSessions[tappedIndex]
             }
         } else {
@@ -212,15 +212,15 @@ class RoomViewController: UIViewController {
         }
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return .All
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return .all
     }
 }
 
 //MARK: - textFiled
 extension RoomViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if let text = textField.text where !text.isEmpty {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let text = textField.text , !text.isEmpty {
             sendText(text)
             textField.text = nil
         }
@@ -231,25 +231,25 @@ extension RoomViewController: UITextFieldDelegate {
 //MARK: - private
 private extension RoomViewController {
     func addKeyboardObserver() {
-        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillShowNotification, object: nil, queue: nil) { [weak self] notify in
-            guard let strongSelf = self, let userInfo = notify.userInfo,
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil, queue: nil) { [weak self] notify in
+            guard let strongSelf = self, let userInfo = (notify as NSNotification).userInfo,
                 let keyBoardBoundsValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
                 let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber else {
                     return
             }
             
-            let keyBoardBounds = keyBoardBoundsValue.CGRectValue()
+            let keyBoardBounds = keyBoardBoundsValue.cgRectValue
             let duration = durationValue.doubleValue
             let deltaY = keyBoardBounds.size.height
             
             if duration > 0 {
                 var optionsInt: UInt = 0
                 if let optionsValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber {
-                    optionsInt = optionsValue.unsignedIntegerValue
+                    optionsInt = optionsValue.uintValue
                 }
                 let options = UIViewAnimationOptions(rawValue: optionsInt)
                 
-                UIView.animateWithDuration(duration, delay: 0, options: options, animations: {
+                UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
                     strongSelf.messageInputerBottom.constant = deltaY
                     strongSelf.view?.layoutIfNeeded()
                     }, completion: nil)
@@ -259,13 +259,13 @@ private extension RoomViewController {
             }
         }
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardWillHideNotification, object: nil, queue: nil) { [weak self] notify in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil, queue: nil) { [weak self] notify in
             guard let strongSelf = self else {
                 return
             }
             
             let duration: Double
-            if let userInfo = notify.userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber {
+            if let userInfo = (notify as NSNotification).userInfo, let durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber {
                 duration = durationValue.doubleValue
             } else {
                 duration = 0
@@ -273,12 +273,12 @@ private extension RoomViewController {
             
             if duration > 0 {
                 var optionsInt: UInt = 0
-                if let userInfo = notify.userInfo, let optionsValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber {
-                    optionsInt = optionsValue.unsignedIntegerValue
+                if let userInfo = (notify as NSNotification).userInfo, let optionsValue = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber {
+                    optionsInt = optionsValue.uintValue
                 }
                 let options = UIViewAnimationOptions(rawValue: optionsInt)
                 
-                UIView.animateWithDuration(duration, delay: 0, options: options, animations: {
+                UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
                     strongSelf.messageInputerBottom.constant = 0
                     strongSelf.view?.layoutIfNeeded()
                     }, completion: nil)
@@ -289,9 +289,9 @@ private extension RoomViewController {
         }
     }
     
-    func updateInterfaceWithSessions(sessions: [VideoSession], targetSize: CGSize, animation: Bool) {
+    func updateInterfaceWithSessions(_ sessions: [VideoSession], targetSize: CGSize, animation: Bool) {
         if animation {
-            UIView.animateWithDuration(0.3, delay: 0, options: .BeginFromCurrentState, animations: {[weak self] () -> Void in
+            UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {[weak self] () -> Void in
                 self?.updateInterfaceWithSessions(sessions, targetSize: targetSize)
                 self?.view.layoutIfNeeded()
                 }, completion: nil)
@@ -300,7 +300,7 @@ private extension RoomViewController {
         }
     }
     
-    func updateInterfaceWithSessions(sessions: [VideoSession], targetSize: CGSize) {
+    func updateInterfaceWithSessions(_ sessions: [VideoSession], targetSize: CGSize) {
         guard !sessions.isEmpty else {
             return
         }
@@ -323,18 +323,18 @@ private extension RoomViewController {
         
         //只有三人及以上时才能切换布局形式
         if sessions.count >= 3 {
-            backgroundDoubleTap.enabled = true
+            backgroundDoubleTap.isEnabled = true
         } else {
-            backgroundDoubleTap.enabled = false
+            backgroundDoubleTap.isEnabled = false
             doubleClickFullSession = nil
         }
     }
     
-    func setIdleTimerActive(active: Bool) {
-        UIApplication.sharedApplication().idleTimerDisabled = !active
+    func setIdleTimerActive(_ active: Bool) {
+        UIApplication.shared.isIdleTimerDisabled = !active
     }
     
-    func fetchSessionOfUid(uid: UInt) -> VideoSession? {
+    func fetchSessionOfUid(_ uid: UInt) -> VideoSession? {
         for session in videoSessions {
             if session.uid == uid {
                 return session
@@ -344,7 +344,7 @@ private extension RoomViewController {
         return nil
     }
     
-    func videoSessionOfUid(uid: UInt) -> VideoSession {
+    func videoSessionOfUid(_ uid: UInt) -> VideoSession {
         if let fetchedSession = fetchSessionOfUid(uid) {
             return fetchedSession
         } else {
@@ -354,7 +354,7 @@ private extension RoomViewController {
         }
     }
     
-    func setVideoMuted(muted: Bool, forUid uid: UInt) {
+    func setVideoMuted(_ muted: Bool, forUid uid: UInt) {
         fetchSessionOfUid(uid)?.isVideoMuted = muted
     }
     
@@ -364,21 +364,21 @@ private extension RoomViewController {
         }
         
         if videoSessions.count == 2 {
-            selfView.hidden = videoMuted
+            selfView.isHidden = videoMuted
         } else {
-            selfView.hidden = false
+            selfView.isHidden = false
         }
     }
     
-    func alertEngineString(string: String) {
+    func alertEngineString(_ string: String) {
         alertString("Engine: \(string)")
     }
     
-    func alertAppString(string: String) {
+    func alertAppString(_ string: String) {
         alertString("App: \(string)")
     }
     
-    func alertString(string: String) {
+    func alertString(_ string: String) {
         guard !string.isEmpty else {
             return
         }
@@ -389,25 +389,25 @@ private extension RoomViewController {
 //MARK: - engine
 private extension RoomViewController {
     func loadAgoraKit() {
-        agoraKit = AgoraRtcEngineKit.sharedEngineWithAppId(KeyCenter.AppId, delegate: self)
+        agoraKit = AgoraRtcEngineKit.sharedEngine(withAppId: KeyCenter.AppId, delegate: self)
         
         agoraKit.enableVideo()
-        agoraKit.setChannelProfile(.ChannelProfile_Free)
+        agoraKit.setChannelProfile(.channelProfile_Free)
         agoraKit.setVideoProfile(videoProfile)
         
         addLocalSession()
         agoraKit.startPreview()
-        if let encryptionType = encryptionType, let encryptionSecret = encryptionSecret where !encryptionSecret.isEmpty {
+        if let encryptionType = encryptionType, let encryptionSecret = encryptionSecret , !encryptionSecret.isEmpty {
             agoraKit.setEncryptionMode(encryptionType.modeString())
             agoraKit.setEncryptionSecret(encryptionSecret)
         }
         
-        let code = agoraKit.joinChannelByKey(nil, channelName: roomName, info: nil, uid: 0, joinSuccess: nil)
+        let code = agoraKit.joinChannel(byKey: nil, channelName: roomName, info: nil, uid: 0, joinSuccess: nil)
         
         if code == 0 {
             setIdleTimerActive(false)
         } else {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.alertEngineString("Join channel failed: \(code)")
             })
         }
@@ -415,7 +415,7 @@ private extension RoomViewController {
         agoraKit.createDataStream(&dataChannelId, reliable: true, ordered: true)
     }
     
-    private func addLocalSession() {
+    func addLocalSession() {
         let localSession = VideoSession.localSession()
         videoSessions.append(localSession)
         agoraKit.setupLocalVideo(localSession.canvas)
@@ -440,8 +440,8 @@ private extension RoomViewController {
         delegate?.roomVCNeedClose(self)
     }
     
-    func sendText(text: String) {
-        if dataChannelId > 0, let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
+    func sendText(_ text: String) {
+        if dataChannelId > 0, let data = text.data(using: String.Encoding.utf8) {
             agoraKit.sendStreamMessage(dataChannelId, data: data)
             chatMessageVC?.appendChat(text, fromUid: 0)
         }
@@ -450,19 +450,19 @@ private extension RoomViewController {
 
 //MARK: - engine delegate
 extension RoomViewController: AgoraRtcEngineDelegate {
-    func rtcEngineConnectionDidInterrupted(engine: AgoraRtcEngineKit!) {
+    func rtcEngineConnectionDidInterrupted(_ engine: AgoraRtcEngineKit!) {
         alertEngineString("Connection Interrupted")
     }
     
-    func rtcEngineConnectionDidLost(engine: AgoraRtcEngineKit!) {
+    func rtcEngineConnectionDidLost(_ engine: AgoraRtcEngineKit!) {
         alertEngineString("Connection Lost")
     }
     
-    func rtcEngine(engine: AgoraRtcEngineKit!, didOccurError errorCode: AgoraRtcErrorCode) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, didOccurError errorCode: AgoraRtcErrorCode) {
         //
     }
     
-    func rtcEngine(engine: AgoraRtcEngineKit!, firstRemoteVideoDecodedOfUid uid: UInt, size: CGSize, elapsed: Int) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, firstRemoteVideoDecodedOfUid uid: UInt, size: CGSize, elapsed: Int) {
         let userSession = videoSessionOfUid(uid)
         let sie = size.fixedSizeWithReference(containerView.bounds.size)
         userSession.size = sie
@@ -471,7 +471,7 @@ extension RoomViewController: AgoraRtcEngineDelegate {
     }
     
     //first local video frame
-    func rtcEngine(engine: AgoraRtcEngineKit!, firstLocalVideoFrameWithSize size: CGSize, elapsed: Int) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, firstLocalVideoFrameWith size: CGSize, elapsed: Int) {
         if let selfSession = videoSessions.first {
             let fixedSize = size.fixedSizeWithReference(containerView.bounds.size)
             selfSession.size = fixedSize
@@ -480,51 +480,51 @@ extension RoomViewController: AgoraRtcEngineDelegate {
     }
     
     //user offline
-    func rtcEngine(engine: AgoraRtcEngineKit!, didOfflineOfUid uid: UInt, reason: AgoraRtcUserOfflineReason) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, didOfflineOfUid uid: UInt, reason: AgoraRtcUserOfflineReason) {
         var indexToDelete: Int?
-        for (index, session) in videoSessions.enumerate() {
+        for (index, session) in videoSessions.enumerated() {
             if session.uid == uid {
                 indexToDelete = index
             }
         }
         
         if let indexToDelete = indexToDelete {
-            let deletedSession = videoSessions.removeAtIndex(indexToDelete)
+            let deletedSession = videoSessions.remove(at: indexToDelete)
             deletedSession.hostingView.removeFromSuperview()
-            if let doubleClickFullSession = doubleClickFullSession where doubleClickFullSession == deletedSession {
+            if let doubleClickFullSession = doubleClickFullSession , doubleClickFullSession == deletedSession {
                 self.doubleClickFullSession = nil
             }
         }
     }
     
     //video muted
-    func rtcEngine(engine: AgoraRtcEngineKit!, didVideoMuted muted: Bool, byUid uid: UInt) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, didVideoMuted muted: Bool, byUid uid: UInt) {
         setVideoMuted(muted, forUid: uid)
     }
     
     //remote stat
-    func rtcEngine(engine: AgoraRtcEngineKit!, remoteVideoStats stats: AgoraRtcRemoteVideoStats!) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, remoteVideoStats stats: AgoraRtcRemoteVideoStats!) {
         if let stats = stats, let session = fetchSessionOfUid(stats.uid) {
-            session.updateMediaInfo(resolution: CGSizeMake(CGFloat(stats.width), CGFloat(stats.height)), bitRate: Int(stats.receivedBitrate), fps: Int(stats.receivedFrameRate))
+            session.updateMediaInfo(resolution: CGSize(width: CGFloat(stats.width), height: CGFloat(stats.height)), bitRate: Int(stats.receivedBitrate), fps: Int(stats.receivedFrameRate))
         }
     }
     
     //data channel
-    func rtcEngine(engine: AgoraRtcEngineKit!, receiveStreamMessageFromUid uid: UInt, streamId: Int, data: NSData!) {
-        guard let data = data, let string = String(data: data, encoding: NSUTF8StringEncoding) where !string.isEmpty else {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, receiveStreamMessageFromUid uid: UInt, streamId: Int, data: Data!) {
+        guard let data = data, let string = String(data: data, encoding: String.Encoding.utf8) , !string.isEmpty else {
             return
         }
         chatMessageVC?.appendChat(string, fromUid: Int64(uid))
     }
     
-    func rtcEngine(engine: AgoraRtcEngineKit!, didOccurStreamMessageErrorFromUid uid: UInt, streamId: Int, error: Int, missed: Int, cached: Int) {
+    func rtcEngine(_ engine: AgoraRtcEngineKit!, didOccurStreamMessageErrorFromUid uid: UInt, streamId: Int, error: Int, missed: Int, cached: Int) {
         print("Data channel error: \(error), missed: \(missed), cached: \(cached)\n")
     }
 }
 
 //MARK: - rotation
 extension RoomViewController {
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         for session in videoSessions {
             if let sessionSize = session.size {
                 session.size = sessionSize.fixedSizeWithReference(size)
