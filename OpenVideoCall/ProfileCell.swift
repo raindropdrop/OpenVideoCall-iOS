@@ -14,7 +14,7 @@ class ProfileCell: UITableViewCell {
     @IBOutlet weak var frameLabel: UILabel!
     @IBOutlet weak var bitRateLabel: UILabel!
     
-    func updateWithProfile(_ profile: AgoraRtcVideoProfile, isSelected: Bool) {
+    func update(with profile: AgoraRtcVideoProfile, isSelected: Bool) {
         if let size = profile.resolution() {
             resLabel.text = "\(Int(size.width))x\(Int(size.height))"
         } else {

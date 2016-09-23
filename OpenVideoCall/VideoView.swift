@@ -54,7 +54,7 @@ extension VideoView {
 }
 
 extension VideoView {
-    func updateInfo(_ info: MediaInfo) {
+    func update(with info: MediaInfo) {
         infoLabel?.text = info.description()
     }
 }
@@ -74,7 +74,6 @@ private extension VideoView {
     func addInfoView() {
         infoView = UIView()
         infoView.translatesAutoresizingMaskIntoConstraints = false
-        infoView.isHidden = true
         infoView.backgroundColor = UIColor.clear
         
         addSubview(infoView)

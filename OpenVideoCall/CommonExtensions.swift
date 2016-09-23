@@ -23,7 +23,7 @@ extension UIColor {
 }
 
 extension CGSize {
-    func fixedSizeWithReference(_ reference: CGSize) -> CGSize {
+    func fixedSize(with reference: CGSize) -> CGSize {
         if reference.width > reference.height {
             return fixedLandscapeSize()
         } else {

@@ -61,13 +61,13 @@ class RoomViewController: UIViewController {
     var agoraKit: AgoraRtcEngineKit!
     fileprivate var videoSessions = [VideoSession]() {
         didSet {
-            updateInterfaceWithSessions(self.videoSessions, targetSize: containerView.frame.size, animation: true)
+            updateInterface(with: self.videoSessions, targetSize: containerView.frame.size, animation: true)
         }
     }
     fileprivate var doubleClickFullSession: VideoSession? {
         didSet {
             if videoSessions.count >= 3 && doubleClickFullSession != oldValue {
-                updateInterfaceWithSessions(videoSessions, targetSize: containerView.frame.size, animation: true)
+                updateInterface(with: videoSessions, targetSize: containerView.frame.size, animation: true)
             }
         }
     }
@@ -204,7 +204,7 @@ class RoomViewController: UIViewController {
     @IBAction func doBackDoubleTapped(_ sender: UITapGestureRecognizer) {
         if doubleClickFullSession == nil {
             //将双击到的session全屏
-            if let tappedIndex = videoViewLayout.reponseViewIndexOfLocation(sender.location(in: containerView)) {
+            if let tappedIndex = videoViewLayout.reponseViewIndex(of: sender.location(in: containerView)) {
                 doubleClickFullSession = videoSessions[tappedIndex]
             }
         } else {
@@ -221,7 +221,7 @@ class RoomViewController: UIViewController {
 extension RoomViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let text = textField.text , !text.isEmpty {
-            sendText(text)
+            send(text: text)
             textField.text = nil
         }
         return true
@@ -289,18 +289,18 @@ private extension RoomViewController {
         }
     }
     
-    func updateInterfaceWithSessions(_ sessions: [VideoSession], targetSize: CGSize, animation: Bool) {
+    func updateInterface(with sessions: [VideoSession], targetSize: CGSize, animation: Bool) {
         if animation {
             UIView.animate(withDuration: 0.3, delay: 0, options: .beginFromCurrentState, animations: {[weak self] () -> Void in
-                self?.updateInterfaceWithSessions(sessions, targetSize: targetSize)
+                self?.updateInterface(with: sessions, targetSize: targetSize)
                 self?.view.layoutIfNeeded()
                 }, completion: nil)
         } else {
-            updateInterfaceWithSessions(sessions, targetSize: targetSize)
+            updateInterface(with: sessions, targetSize: targetSize)
         }
     }
     
-    func updateInterfaceWithSessions(_ sessions: [VideoSession], targetSize: CGSize) {
+    func updateInterface(with sessions: [VideoSession], targetSize: CGSize) {
         guard !sessions.isEmpty else {
             return
         }
@@ -334,7 +334,7 @@ private extension RoomViewController {
         UIApplication.shared.isIdleTimerDisabled = !active
     }
     
-    func fetchSessionOfUid(_ uid: UInt) -> VideoSession? {
+    func fetchSession(of uid: UInt) -> VideoSession? {
         for session in videoSessions {
             if session.uid == uid {
                 return session
@@ -344,8 +344,8 @@ private extension RoomViewController {
         return nil
     }
     
-    func videoSessionOfUid(_ uid: UInt) -> VideoSession {
-        if let fetchedSession = fetchSessionOfUid(uid) {
+    func videoSession(of uid: UInt) -> VideoSession {
+        if let fetchedSession = fetchSession(of: uid) {
             return fetchedSession
         } else {
             let newSession = VideoSession(uid: uid)
@@ -355,7 +355,7 @@ private extension RoomViewController {
     }
     
     func setVideoMuted(_ muted: Bool, forUid uid: UInt) {
-        fetchSessionOfUid(uid)?.isVideoMuted = muted
+        fetchSession(of: uid)?.isVideoMuted = muted
     }
     
     func updateSelfViewVisiable() {
@@ -370,19 +370,11 @@ private extension RoomViewController {
         }
     }
     
-    func alertEngineString(_ string: String) {
-        alertString("Engine: \(string)")
-    }
-    
-    func alertAppString(_ string: String) {
-        alertString("App: \(string)")
-    }
-    
-    func alertString(_ string: String) {
+    func alert(string: String) {
         guard !string.isEmpty else {
             return
         }
-        chatMessageVC?.appendAlert(string)
+        chatMessageVC?.append(alert: string)
     }
 }
 
@@ -408,7 +400,7 @@ private extension RoomViewController {
             setIdleTimerActive(false)
         } else {
             DispatchQueue.main.async(execute: {
-                self.alertEngineString("Join channel failed: \(code)")
+                self.alert(string: "Join channel failed: \(code)")
             })
         }
         
@@ -440,10 +432,10 @@ private extension RoomViewController {
         delegate?.roomVCNeedClose(self)
     }
     
-    func sendText(_ text: String) {
+    func send(text: String) {
         if dataChannelId > 0, let data = text.data(using: String.Encoding.utf8) {
             agoraKit.sendStreamMessage(dataChannelId, data: data)
-            chatMessageVC?.appendChat(text, fromUid: 0)
+            chatMessageVC?.append(chat: text, fromUid: 0)
         }
     }
 }
@@ -451,11 +443,11 @@ private extension RoomViewController {
 //MARK: - engine delegate
 extension RoomViewController: AgoraRtcEngineDelegate {
     func rtcEngineConnectionDidInterrupted(_ engine: AgoraRtcEngineKit!) {
-        alertEngineString("Connection Interrupted")
+        alert(string: "Connection Interrupted")
     }
     
     func rtcEngineConnectionDidLost(_ engine: AgoraRtcEngineKit!) {
-        alertEngineString("Connection Lost")
+        alert(string: "Connection Lost")
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit!, didOccurError errorCode: AgoraRtcErrorCode) {
@@ -463,8 +455,8 @@ extension RoomViewController: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit!, firstRemoteVideoDecodedOfUid uid: UInt, size: CGSize, elapsed: Int) {
-        let userSession = videoSessionOfUid(uid)
-        let sie = size.fixedSizeWithReference(containerView.bounds.size)
+        let userSession = videoSession(of: uid)
+        let sie = size.fixedSize(with: containerView.bounds.size)
         userSession.size = sie
         userSession.updateMediaInfo(resolution: size)
         agoraKit.setupRemoteVideo(userSession.canvas)
@@ -473,9 +465,9 @@ extension RoomViewController: AgoraRtcEngineDelegate {
     //first local video frame
     func rtcEngine(_ engine: AgoraRtcEngineKit!, firstLocalVideoFrameWith size: CGSize, elapsed: Int) {
         if let selfSession = videoSessions.first {
-            let fixedSize = size.fixedSizeWithReference(containerView.bounds.size)
+            let fixedSize = size.fixedSize(with: containerView.bounds.size)
             selfSession.size = fixedSize
-            updateInterfaceWithSessions(videoSessions, targetSize: containerView.frame.size, animation: false)
+            updateInterface(with: videoSessions, targetSize: containerView.frame.size, animation: false)
         }
     }
     
@@ -504,7 +496,7 @@ extension RoomViewController: AgoraRtcEngineDelegate {
     
     //remote stat
     func rtcEngine(_ engine: AgoraRtcEngineKit!, remoteVideoStats stats: AgoraRtcRemoteVideoStats!) {
-        if let stats = stats, let session = fetchSessionOfUid(stats.uid) {
+        if let stats = stats, let session = fetchSession(of: stats.uid) {
             session.updateMediaInfo(resolution: CGSize(width: CGFloat(stats.width), height: CGFloat(stats.height)), bitRate: Int(stats.receivedBitrate), fps: Int(stats.receivedFrameRate))
         }
     }
@@ -514,7 +506,7 @@ extension RoomViewController: AgoraRtcEngineDelegate {
         guard let data = data, let string = String(data: data, encoding: String.Encoding.utf8) , !string.isEmpty else {
             return
         }
-        chatMessageVC?.appendChat(string, fromUid: Int64(uid))
+        chatMessageVC?.append(chat: string, fromUid: Int64(uid))
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit!, didOccurStreamMessageErrorFromUid uid: UInt, streamId: Int, error: Int, missed: Int, cached: Int) {
@@ -527,9 +519,9 @@ extension RoomViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         for session in videoSessions {
             if let sessionSize = session.size {
-                session.size = sessionSize.fixedSizeWithReference(size)
+                session.size = sessionSize.fixedSize(with: size)
             }
         }
-        updateInterfaceWithSessions(videoSessions, targetSize: size, animation: true)
+        updateInterface(with: videoSessions, targetSize: size, animation: true)
     }
 }

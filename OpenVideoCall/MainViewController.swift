@@ -45,14 +45,14 @@ class MainViewController: UIViewController {
     
     @IBAction func doRoomNameTextFieldEditing(_ sender: UITextField) {
         if let text = sender.text , !text.isEmpty {
-            let legalString = MediaCharacter.updateToLegalMediaString(text)
+            let legalString = MediaCharacter.updateToLegalMediaString(from: text)
             sender.text = legalString
         }
     }
     
     @IBAction func doEncryptionTextFieldEditing(_ sender: UITextField) {
         if let text = sender.text , !text.isEmpty {
-            let legalString = MediaCharacter.updateToLegalMediaString(text)
+            let legalString = MediaCharacter.updateToLegalMediaString(from: text)
             sender.text = legalString
         }
     }
@@ -75,12 +75,12 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func doJoinPressed(_ sender: UIButton) {
-        enterRoom(roomNameTextField.text)
+        enter(roomName: roomNameTextField.text)
     }
 }
 
 private extension MainViewController {
-    func enterRoom(_ roomName: String?) {
+    func enter(roomName: String?) {
         guard let roomName = roomName , !roomName.isEmpty else {
             return
         }
@@ -104,7 +104,7 @@ extension MainViewController: RoomVCDelegate {
 extension MainViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
-        case roomNameTextField:     enterRoom(textField.text)
+        case roomNameTextField:     enter(roomName: textField.text)
         case encryptionTextField:   textField.resignFirstResponder()
         default: break
         }

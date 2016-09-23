@@ -15,7 +15,7 @@ class VideoSession: NSObject {
     var size: CGSize?
     var mediaInfo = MediaInfo() {
         didSet {
-            hostingView?.updateInfo(mediaInfo)
+            hostingView?.update(with: mediaInfo)
         }
     }
     
@@ -54,6 +54,6 @@ extension VideoSession {
             mediaInfo.fps = fps
         }
         
-        hostingView.updateInfo(mediaInfo)
+        hostingView.update(with: mediaInfo)
     }
 }

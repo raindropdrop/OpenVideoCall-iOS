@@ -21,19 +21,19 @@ class ChatMessageViewController: UIViewController {
         messageTableView.estimatedRowHeight = 24
     }
     
-    func appendChat(_ text: String, fromUid uid: Int64) {
+    func append(chat text: String, fromUid uid: Int64) {
         let message = Message(text: text, type: .chat)
-        appendMessage(message)
+        append(message: message)
     }
     
-    func appendAlert(_ text: String) {
+    func append(alert text: String) {
         let message = Message(text: text, type: .alert)
-        appendMessage(message)
+        append(message: message)
     }
 }
 
 private extension ChatMessageViewController {
-    func appendMessage(_ message: Message) {
+    func append(message: Message) {
         messageList.append(message)
         
         var deleted: Message?
@@ -41,10 +41,10 @@ private extension ChatMessageViewController {
             deleted = messageList.removeFirst()
         }
         
-        updateMessageTableWithDeletedMesage(deleted)
+        updateMessageTable(with: deleted)
     }
     
-    func updateMessageTableWithDeletedMesage(_ deleted: Message?) {
+    func updateMessageTable(with deleted: Message?) {
         guard let tableView = messageTableView else {
             return
         }
@@ -70,7 +70,7 @@ extension ChatMessageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath) as! ChatMessageCell
         let message = messageList[(indexPath as NSIndexPath).row]
-        cell.setMessage(message)
+        cell.set(with: message)
         return cell
     }
 }

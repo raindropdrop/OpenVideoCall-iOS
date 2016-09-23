@@ -12,7 +12,7 @@ class ChatMessageCell: UITableViewCell {
     @IBOutlet weak var colorView: UIView!
     @IBOutlet weak var messageLabel: UILabel!
     
-    func setMessage(_ message: Message) {
+    func set(with message: Message) {
         backgroundColor = UIColor.clear
         
         messageLabel.text = message.text

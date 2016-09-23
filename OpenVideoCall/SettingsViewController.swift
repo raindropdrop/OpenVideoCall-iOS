@@ -38,7 +38,7 @@ extension SettingsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
         let selectedProfile = profiles[indexPath.row]
-        cell.updateWithProfile(selectedProfile, isSelected: (selectedProfile == videoProfile))
+        cell.update(with: selectedProfile, isSelected: (selectedProfile == videoProfile))
         
         return cell
     }

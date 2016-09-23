@@ -104,7 +104,7 @@ class VideoViewLayout {
         NSLayoutConstraint.activate(layoutConstraints)
     }
     
-    func reponseViewIndexOfLocation(_ location: CGPoint) -> Int? {
+    func reponseViewIndex(of location: CGPoint) -> Int? {
         guard let selfView = selfView, let containerView = containerView , fullView == nil else {
             return nil
         }
@@ -253,7 +253,7 @@ private extension VideoViewLayout {
     func layoutEqualSessionViews(_ allViews: [UIView], inContainerView containerView: UIView) -> [NSLayoutConstraint] {
         
         var layouts = [NSLayoutConstraint]()
-        let rowsPerScreen = CollectionIndexModel.rowsPerScreenWithTotalCount(allViews.count)
+        let rowsPerScreen = CollectionIndexModel.rowsPerScreen(with: allViews.count)
         
         for (index, view) in allViews.enumerated() {
             if index > MaxPeerCount {
@@ -262,14 +262,14 @@ private extension VideoViewLayout {
             containerView.addSubview(view)
             
             let viewTop: NSLayoutConstraint
-            if let topIndex = CollectionIndexModel.topIndexOfIndex(index, rowsPerScreen: rowsPerScreen) {
+            if let topIndex = CollectionIndexModel.topIndex(of: index, rowsPerScreen: rowsPerScreen) {
                 viewTop = NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: allViews[topIndex], attribute: .bottom, multiplier: 1, constant: 0)
             } else {
                 viewTop = NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
             }
             
             let viewLeft: NSLayoutConstraint
-            if let leftIndex = CollectionIndexModel.leftIndexOfIndex(index, rowsPerScreen: rowsPerScreen) {
+            if let leftIndex = CollectionIndexModel.leftIndex(of: index, rowsPerScreen: rowsPerScreen) {
                 viewLeft = NSLayoutConstraint(item: view, attribute: .left, relatedBy: .equal, toItem: allViews[leftIndex], attribute: .right, multiplier: 1, constant: 0)
             } else {
                 viewLeft = NSLayoutConstraint(item: view, attribute: .left, relatedBy: .equal, toItem: containerView, attribute: .left, multiplier: 1, constant: 0)
