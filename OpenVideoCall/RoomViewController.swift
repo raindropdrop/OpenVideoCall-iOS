@@ -71,7 +71,7 @@ class RoomViewController: UIViewController {
             }
         }
     }
-    fileprivate let videoViewLayout = VideoViewLayout()
+    fileprivate let videoViewLayouter = VideoViewLayouter()
     fileprivate var dataChannelId: Int = -1
     
     //MARK: alert
@@ -142,7 +142,7 @@ class RoomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        roomNameLabel.text = "\(roomName)"
+        roomNameLabel.text = "\(roomName!)"
         backgroundTap.require(toFail: backgroundDoubleTap)
         addKeyboardObserver()
         
@@ -204,7 +204,7 @@ class RoomViewController: UIViewController {
     @IBAction func doBackDoubleTapped(_ sender: UITapGestureRecognizer) {
         if doubleClickFullSession == nil {
             //将双击到的session全屏
-            if let tappedIndex = videoViewLayout.reponseViewIndex(of: sender.location(in: containerView)) {
+            if let tappedIndex = videoViewLayouter.reponseViewIndex(of: sender.location(in: containerView)) {
                 doubleClickFullSession = videoSessions[tappedIndex]
             }
         } else {
@@ -306,18 +306,18 @@ private extension RoomViewController {
         }
         
         let selfSession = sessions.first!
-        videoViewLayout.selfView = selfSession.hostingView
-        videoViewLayout.selfSize = selfSession.size
-        videoViewLayout.targetSize = targetSize
+        videoViewLayouter.selfView = selfSession.hostingView
+        videoViewLayouter.selfSize = selfSession.size
+        videoViewLayouter.targetSize = targetSize
         var peerVideoViews = [VideoView]()
         for i in 1..<sessions.count {
             peerVideoViews.append(sessions[i].hostingView)
         }
-        videoViewLayout.videoViews = peerVideoViews
-        videoViewLayout.fullView = doubleClickFullSession?.hostingView
-        videoViewLayout.containerView = containerView
+        videoViewLayouter.videoViews = peerVideoViews
+        videoViewLayouter.fullView = doubleClickFullSession?.hostingView
+        videoViewLayouter.containerView = containerView
         
-        videoViewLayout.layoutVideoViews()
+        videoViewLayouter.layoutVideoViews()
         
         updateSelfViewVisiable()
         
@@ -388,7 +388,7 @@ private extension RoomViewController {
         
         addLocalSession()
         agoraKit.startPreview()
-        if let encryptionType = encryptionType, let encryptionSecret = encryptionSecret , !encryptionSecret.isEmpty {
+        if let encryptionType = encryptionType, let encryptionSecret = encryptionSecret, !encryptionSecret.isEmpty {
             agoraKit.setEncryptionMode(encryptionType.modeString())
             agoraKit.setEncryptionSecret(encryptionSecret)
         }

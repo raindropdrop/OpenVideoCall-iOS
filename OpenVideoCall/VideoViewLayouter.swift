@@ -1,5 +1,5 @@
 //
-//  VideoViewLayout.swift
+//  VideoViewLayouter.swift
 //  OpenVideoCall
 //
 //  Created by GongYuhua on 3/24/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class VideoViewLayout {
+class VideoViewLayouter {
     
     fileprivate var MaxPeerCount = 4
     fileprivate var layoutConstraints = [NSLayoutConstraint]()
@@ -124,7 +124,7 @@ class VideoViewLayout {
 }
 
 //MARK: - layouts
-private extension VideoViewLayout {
+private extension VideoViewLayouter {
     //全屏布局
     func layoutFullSessionView(_ view: UIView, inContainerView containerView: UIView) -> [NSLayoutConstraint] {
         containerView.addSubview(view)
@@ -143,7 +143,6 @@ private extension VideoViewLayout {
         containerView.addSubview(view)
         var layouts = [NSLayoutConstraint]()
         
-        containerView.addSubview(view)
         let right = NSLayoutConstraint(item: view, attribute: .right, relatedBy: .equal, toItem: containerView, attribute: .right, multiplier: 1, constant: -5)
         let top = NSLayoutConstraint(item: view, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 64)
         let width = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: containerView, attribute: .width, multiplier: 0.25, constant: 0)

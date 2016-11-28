@@ -20,7 +20,7 @@
 		07C2CF681D6AF13300C84349 /* CollectionIndexModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF631D6AF13300C84349 /* CollectionIndexModel.swift */; };
 		07C2CF6A1D6AF13300C84349 /* VideoSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF651D6AF13300C84349 /* VideoSession.swift */; };
 		07C2CF6B1D6AF13300C84349 /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF661D6AF13300C84349 /* VideoView.swift */; };
-		07C2CF6C1D6AF13300C84349 /* VideoViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF671D6AF13300C84349 /* VideoViewLayout.swift */; };
+		07C2CF6C1D6AF13300C84349 /* VideoViewLayouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF671D6AF13300C84349 /* VideoViewLayouter.swift */; };
 		07C2CF6F1D6AF24000C84349 /* AGVideoPreProcessing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF6E1D6AF24000C84349 /* AGVideoPreProcessing.mm */; };
 		07C2CF721D6AF34800C84349 /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF701D6AF34800C84349 /* CommonExtensions.swift */; };
 		07C2CF751D6AF36B00C84349 /* MediaInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C2CF741D6AF36B00C84349 /* MediaInfo.swift */; };
@@ -29,7 +29,6 @@
 		07C2CF971D6BF18100C84349 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 07C2CF961D6BF18100C84349 /* libc++.tbd */; };
 		07C2CF991D6BF1E400C84349 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07C2CF981D6BF1E400C84349 /* AudioToolbox.framework */; };
 		07C2CF9B1D6BF1EF00C84349 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07C2CF9A1D6BF1EF00C84349 /* VideoToolbox.framework */; };
-		07C2CF9D1D6BF22400C84349 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07C2CF9C1D6BF22400C84349 /* CoreMotion.framework */; };
 		07C2CF9F1D6BF22B00C84349 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07C2CF9E1D6BF22B00C84349 /* CoreMedia.framework */; };
 		07C2CFA11D6BF23300C84349 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07C2CFA01D6BF23300C84349 /* CoreTelephony.framework */; };
 		07F52EB51D62F39D006DDCD4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F52EB41D62F39D006DDCD4 /* AppDelegate.swift */; };
@@ -53,7 +52,7 @@
 		07C2CF631D6AF13300C84349 /* CollectionIndexModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionIndexModel.swift; sourceTree = "<group>"; };
 		07C2CF651D6AF13300C84349 /* VideoSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoSession.swift; sourceTree = "<group>"; };
 		07C2CF661D6AF13300C84349 /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = VideoView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		07C2CF671D6AF13300C84349 /* VideoViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = VideoViewLayout.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		07C2CF671D6AF13300C84349 /* VideoViewLayouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = VideoViewLayouter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		07C2CF6D1D6AF24000C84349 /* AGVideoPreProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGVideoPreProcessing.h; sourceTree = "<group>"; };
 		07C2CF6E1D6AF24000C84349 /* AGVideoPreProcessing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AGVideoPreProcessing.mm; sourceTree = "<group>"; };
 		07C2CF701D6AF34800C84349 /* CommonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CommonExtensions.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -82,7 +81,6 @@
 				073177F61D80084E0062A68C /* AgoraRtcEngineKit.framework in Frameworks */,
 				07C2CFA11D6BF23300C84349 /* CoreTelephony.framework in Frameworks */,
 				07C2CF9F1D6BF22B00C84349 /* CoreMedia.framework in Frameworks */,
-				07C2CF9D1D6BF22400C84349 /* CoreMotion.framework in Frameworks */,
 				07C2CF9B1D6BF1EF00C84349 /* VideoToolbox.framework in Frameworks */,
 				07C2CF991D6BF1E400C84349 /* AudioToolbox.framework in Frameworks */,
 				07C2CF971D6BF18100C84349 /* libc++.tbd in Frameworks */,
@@ -151,7 +149,7 @@
 				07C2CF611D6AE63000C84349 /* ChatMessageCell.swift */,
 				07C2CF651D6AF13300C84349 /* VideoSession.swift */,
 				07C2CF661D6AF13300C84349 /* VideoView.swift */,
-				07C2CF671D6AF13300C84349 /* VideoViewLayout.swift */,
+				07C2CF671D6AF13300C84349 /* VideoViewLayouter.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -222,7 +220,7 @@
 					07F52EB01D62F39D006DDCD4 = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -273,7 +271,7 @@
 				07B7253A1D76C99A00B459E5 /* Message.swift in Sources */,
 				07F52EB51D62F39D006DDCD4 /* AppDelegate.swift in Sources */,
 				07C2CF5A1D6ADDCA00C84349 /* RoomViewController.swift in Sources */,
-				07C2CF6C1D6AF13300C84349 /* VideoViewLayout.swift in Sources */,
+				07C2CF6C1D6AF13300C84349 /* VideoViewLayouter.swift in Sources */,
 				07C2CF771D6AF3F400C84349 /* KeyCenter.swift in Sources */,
 				07C2CF6A1D6AF13300C84349 /* VideoSession.swift in Sources */,
 				0786497F1D65A4C6004AD88E /* ProfileCell.swift in Sources */,
@@ -405,6 +403,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -427,6 +426,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
