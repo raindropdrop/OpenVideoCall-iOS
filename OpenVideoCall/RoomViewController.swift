@@ -138,6 +138,9 @@ class RoomViewController: UIViewController {
         }
     }
     
+    //MARK: crypto loader
+    private let cryptoLoader = AgoraRtcCryptoLoader()
+    
     //MARK: - life cycle
     override func viewDidLoad() {
         super.viewDidLoad()

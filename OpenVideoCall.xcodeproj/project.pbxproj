@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		070275CE1D66A9DC00ABBC23 /* MediaCharacter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070275CD1D66A9DC00ABBC23 /* MediaCharacter.swift */; };
+		072CC0A21E600A31000ED606 /* AgoraRtcCryptoLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072CC0A01E600A31000ED606 /* AgoraRtcCryptoLoader.framework */; };
+		072CC0A31E600A31000ED606 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 072CC0A11E600A31000ED606 /* libcrypto.a */; };
 		073177F61D80084E0062A68C /* AgoraRtcEngineKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 073177F51D80084E0062A68C /* AgoraRtcEngineKit.framework */; };
 		073BDB5A1D64742A00B62E14 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073BDB591D64742A00B62E14 /* MainViewController.swift */; };
 		073BDB5C1D64743C00B62E14 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073BDB5B1D64743C00B62E14 /* SettingsViewController.swift */; };
@@ -50,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		070275CD1D66A9DC00ABBC23 /* MediaCharacter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaCharacter.swift; sourceTree = "<group>"; };
+		072CC0A01E600A31000ED606 /* AgoraRtcCryptoLoader.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcCryptoLoader.framework; sourceTree = "<group>"; };
+		072CC0A11E600A31000ED606 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		073177F51D80084E0062A68C /* AgoraRtcEngineKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcEngineKit.framework; sourceTree = "<group>"; };
 		073BDB591D64742A00B62E14 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		073BDB5B1D64743C00B62E14 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -97,8 +101,10 @@
 				07C2CF9F1D6BF22B00C84349 /* CoreMedia.framework in Frameworks */,
 				07C2CF9B1D6BF1EF00C84349 /* VideoToolbox.framework in Frameworks */,
 				07C2CF991D6BF1E400C84349 /* AudioToolbox.framework in Frameworks */,
+				072CC0A21E600A31000ED606 /* AgoraRtcCryptoLoader.framework in Frameworks */,
 				07C2CF971D6BF18100C84349 /* libc++.tbd in Frameworks */,
 				07C2CF951D6BF17700C84349 /* AVFoundation.framework in Frameworks */,
+				072CC0A31E600A31000ED606 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				073177F51D80084E0062A68C /* AgoraRtcEngineKit.framework */,
+				072CC0A01E600A31000ED606 /* AgoraRtcCryptoLoader.framework */,
+				072CC0A11E600A31000ED606 /* libcrypto.a */,
 			);
 			path = libs;
 			name = libs;
@@ -491,6 +499,10 @@
 				INFOPLIST_FILE = OpenVideoCall/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenVideoCall/libs",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.OpenVideoCall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OpenVideoCall/OpenVideoCall-Bridging-Header.h";
@@ -515,6 +527,10 @@
 				INFOPLIST_FILE = OpenVideoCall/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenVideoCall/libs",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.OpenVideoCall;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "OpenVideoCall/OpenVideoCall-Bridging-Header.h";
@@ -582,6 +598,7 @@
 				07F531B01E28A719009BFE58 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
