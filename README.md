@@ -1,11 +1,11 @@
-# OpenVideoCall_iOS
+# OpenVideoCall iOS
 
 Agora OpenVideoCall is a demo of [Agora.io](http://www.agora.io) Video SDK - iOS
 
 
 ## Bug reports
 
-* https://github.com/AgoraLab/OpenVideoCall_iOS/issues
+* https://github.com/AgoraIO/OpenVideoCall-iOS/issues
 
 
 ## Build Instructions
@@ -18,7 +18,7 @@ NOTICE: before building, you need to
 	you can get your app id at https://dashboard.agora.io
 
 
-2. update libraries at OpenVideoCall/libs
+2. update libraries at OpenVideoCall
 
 
 Enjoy video calling!
