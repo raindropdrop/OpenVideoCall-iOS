@@ -32,7 +32,13 @@ First, create a developer account at [Agora.io](https://dashboard.agora.io/signi
 static let AppId: String = "Your App ID"
 ```
 
-Next, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/blog/download/). Unzip the downloaded SDK package and copy the **libs/AgoraRtcEngineKit.framework** to the "OpenVideoCall" folder in project.
+Next, download the **Agora Video SDK** from [Agora.io SDK](https://www.agora.io/en/blog/download/). Unzip the downloaded SDK package and copy the files in **libs** folder
+
+- AgoraRtcEngineKit.framework
+- AgoraRtcCryptoLoader.framework
+- libcrypto.a
+
+to the "OpenVideoCall" folder in project.
 
 Finally, Open OpenVideoCall.xcodeproj, connect your iPhone／iPad device, setup your development signing and run.
 

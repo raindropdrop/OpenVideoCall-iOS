@@ -32,7 +32,13 @@ Agora视频SDK支持 iOS / Android / Windows / macOS 等多个平台，你可以
 static let AppId: String = "Your App ID"
 ```
 
-然后在 [Agora.io SDK](https://www.agora.io/cn/blog/download/) 下载 **视频通话 + 直播 SDK**，解压后将其中的 **libs/AgoraRtcEngineKit.framework** 复制到本项目的 “OpenVideoCall” 文件夹下。
+然后在 [Agora.io SDK](https://www.agora.io/cn/blog/download/) 下载 **视频通话 + 直播 SDK**，解压后将其中**libs**文件夹下的 
+
+- AgoraRtcEngineKit.framework
+- AgoraRtcCryptoLoader.framework
+- libcrypto.a
+
+三个文件复制到本项目的 “OpenVideoCall” 文件夹下。
 
 最后使用 XCode 打开 OpenVideoCall.xcodeproj，连接 iPhone／iPad 测试设备，设置有效的开发者签名后即可运行。
 
